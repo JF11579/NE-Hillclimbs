@@ -89,6 +89,25 @@ details th { color: var(--ink); }
 .signup-row { display: flex; gap: 8px; flex: 1 1 300px; max-width: 420px; }
 .signup input[type=email] { flex: 1; min-width: 0; font: inherit; padding: 7px 10px; border: 1px solid var(--line); border-radius: 8px; background: var(--bg); color: var(--ink); }
 .signup button { cursor: pointer; font: inherit; font-size: 14px; }
+:root { --reg: #3b7dd8; --race: #d4602a; --grid: #ebe9e3; --surface: #ffffff; }
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --reg: #4a88d8; --race: #d86c38; --grid: #2a302d; --surface: #1d2320; } }
+.tl-panel { padding: 12px 12px 6px; }
+.tl-legend { display: flex; gap: 6px 18px; flex-wrap: wrap; font-size: 12.5px; color: var(--muted); margin: 0 4px 6px; }
+.tl-legend span { display: inline-flex; align-items: center; gap: 6px; }
+.lg-bar { display: inline-block; width: 22px; height: 8px; border-radius: 4px; background: var(--reg); }
+.lg-dot { display: inline-block; width: 10px; height: 10px; border-radius: 50%; background: var(--race); }
+.lg-bar.est { background: color-mix(in srgb, var(--reg) 30%, transparent); outline: 1.5px dashed var(--reg); outline-offset: -1.5px; }
+.lg-dot.est { background: var(--surface); box-shadow: inset 0 0 0 2px var(--race); }
+.tl-wrap { position: relative; }
+.tl-wrap svg { display: block; overflow: visible; }
+.tl-wrap text { fill: var(--muted); font-size: 11px; }
+.tl-wrap .tl-name { fill: var(--ink); font-size: 12.5px; }
+.tl-row { cursor: pointer; }
+.tl-row:hover .tl-hit, .tl-row:focus .tl-hit { fill: var(--accent-soft); }
+.tl-row:focus { outline: none; }
+.tl-tip { position: absolute; pointer-events: none; background: var(--card); border: 1px solid var(--line); border-radius: 8px;
+  padding: 8px 10px; font-size: 12.5px; box-shadow: 0 4px 14px rgba(0,0,0,.12); max-width: 260px; z-index: 2; }
+.tl-tip b { display: block; margin-bottom: 2px; }
 .leaflet-popup-content { font: 13px/1.4 -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
 </style>
 </head>
@@ -120,6 +139,16 @@ details th { color: var(--ink); }
       <h2>Map</h2>
       <div class="panel"><div id="map"></div></div>
     </section>
+  </div>
+
+  <h2>Season timeline</h2>
+  <div class="panel tl-panel">
+    <div class="tl-legend">
+      <span><i class="lg-bar"></i>Registration window</span>
+      <span><i class="lg-dot"></i>Race day</span>
+      <span><i class="lg-bar est"></i><i class="lg-dot est"></i>Estimated from last year</span>
+    </div>
+    <div class="tl-wrap" id="timeline"><div class="tl-tip" id="tl-tip" hidden></div></div>
   </div>
 
   <h2>Races</h2>
@@ -289,6 +318,75 @@ function upcoming() {
     </div>`).join("");
 }
 
+const SHORT = { "high-point": "High Point", "crank-the-kanc": "Crank the Kanc", "whiteface": "Whiteface",
+  "rock-pile": "Rock Pile (ride)", "kearsarge": "Kearsarge", "mt-washington": "Mt Washington", "ascutney": "Ascutney",
+  "greylock": "Greylock", "prospect": "Prospect Mtn", "allen-clark": "App Gap", "tinneys": "Tinney's" };
+
+function timeline() {
+  const wrap = document.getElementById("timeline"), tip = document.getElementById("tl-tip");
+  wrap.querySelector("svg")?.remove();
+  const W = wrap.clientWidth; tlWidth = W; const narrow = W < 560;
+  const left = narrow ? 104 : 140, right = 10, top = 22, rowH = 28, bottom = 18;
+  const rows = RACES.filter(r => r.s.date);
+  const H = top + rows.length * rowH + bottom;
+  const start = new Date(today.getFullYear(), today.getMonth(), 1);
+  const last = new Date(Math.max(...rows.map(r => r.s.date)));
+  const end = new Date(last.getFullYear(), last.getMonth() + 1, 1);
+  const x = d => left + (Math.min(Math.max(d, start), end) - start) / (end - start) * (W - left - right);
+  const NS = "http://www.w3.org/2000/svg";
+  const el = (tag, attrs, parent) => { const n = document.createElementNS(NS, tag); for (const k in attrs) n.setAttribute(k, attrs[k]); parent.appendChild(n); return n; };
+  const svg = el("svg", { width: W, height: H, role: "img", "aria-label": "Season timeline of registration windows and race days" }, wrap);
+
+  // Month grid + labels (every other month when narrow)
+  let i = 0;
+  for (let m = new Date(start); m <= end; m = new Date(m.getFullYear(), m.getMonth() + 1, 1), i++) {
+    el("line", { x1: x(m), x2: x(m), y1: top - 4, y2: H - bottom, stroke: "var(--grid)", "stroke-width": 1 }, svg);
+    if (m < end && (!narrow || i % 2 === 0)) {
+      const t = el("text", { x: x(m) + 3, y: top - 9 }, svg);
+      t.textContent = m.toLocaleDateString("en-US", { month: "short" }) + (m.getMonth() === 0 || (i === 0 && !narrow) ? " ’" + String(m.getFullYear()).slice(2) : "");
+    }
+  }
+  // Today line
+  el("line", { x1: x(today), x2: x(today), y1: top - 4, y2: H - bottom, stroke: "var(--ink)", "stroke-width": 1.5, "stroke-dasharray": "3 3" }, svg);
+
+  rows.forEach((r, k) => {
+    const s = r.s, cy = top + k * rowH + rowH / 2;
+    const g = el("g", { class: "tl-row", tabindex: 0, "data-jump": r.id }, svg);
+    el("rect", { class: "tl-hit", x: 0, y: cy - rowH / 2, width: W, height: rowH, rx: 6, fill: "transparent" }, g);
+    const name = el("text", { class: "tl-name", x: 6, y: cy + 4 }, g);
+    name.textContent = SHORT[r.id] || r.name;
+    if (s.regOpen && s.regClose) {
+      const x1 = x(s.regOpen), x2 = Math.max(x(s.regClose), x1 + 4);
+      el("rect", s.real
+        ? { x: x1, y: cy - 4, width: x2 - x1, height: 8, rx: 4, fill: "var(--reg)" }
+        : { x: x1, y: cy - 4, width: x2 - x1, height: 8, rx: 4, fill: "var(--reg)", "fill-opacity": .3, stroke: "var(--reg)", "stroke-width": 1.5, "stroke-dasharray": "4 2" }, g);
+    }
+    el("circle", { cx: x(s.date), cy, r: 6, fill: s.real ? "var(--race)" : "var(--surface)",
+      stroke: s.real ? "var(--surface)" : "var(--race)", "stroke-width": 2 }, g);
+
+    const show = ev => {
+      const f = (d, real) => d ? (real ? "" : "≈ ") + fmt(d, { month: "short", day: "numeric", year: "numeric" }) : "TBA";
+      tip.innerHTML = `<b>${esc(r.name)}</b>Race day: ${f(s.date, s.real)}<br>Registration: ${f(s.regOpen, s.real)} – ${f(s.regClose, s.real)}<br><span class="sub">${esc(r.st[0])}</span>`;
+      tip.hidden = false;
+      const box = wrap.getBoundingClientRect();
+      const px = ev.clientX ? ev.clientX - box.left : x(s.date), tw = tip.offsetWidth;
+      tip.style.left = Math.min(Math.max(px + 12, 0), W - tw) + "px";
+      tip.style.top = (cy + 14) + "px";
+    };
+    g.addEventListener("mousemove", show);
+    g.addEventListener("focus", show);
+    g.addEventListener("mouseleave", () => tip.hidden = true);
+    g.addEventListener("blur", () => tip.hidden = true);
+  });
+  const tt = el("text", { x: Math.min(x(today) + 4, W - 34), y: H - 4 }, svg);
+  tt.textContent = "Today";
+}
+let tlWidth = 0;
+new ResizeObserver(([e]) => {
+  const w = Math.round(e.contentRect.width);
+  if (RACES.length && w !== tlWidth) { tlWidth = w; timeline(); }
+}).observe(document.getElementById("timeline"));
+
 function map() {
   const m = L.map("map", { scrollWheelZoom: false }).setView([43.4, -72.6], 6);
   L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
@@ -334,7 +432,7 @@ const syncFilters = () => document.querySelectorAll("[data-f]").forEach(b => b.s
     "Last checked: " + new Date(live.checked).toLocaleString("en-US", { dateStyle: "medium", timeStyle: "short" });
   document.getElementById("notfound").innerHTML = (races.notFound || []).map(n =>
     `<div style="margin:4px 0"><b>${esc(n.name)}</b>: ${esc(n.note)}</div>`).join("");
-  upcoming(); render(); map();
+  upcoming(); render(); timeline(); map();
 })();
 </script>
 </body>
