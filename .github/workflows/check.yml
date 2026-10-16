@@ -25,6 +25,7 @@ jobs:
       - name: Check BikeReg / Movemint and open alert issues
         env:
           GH_TOKEN: ${{ github.token }}
+          BUTTONDOWN_API_KEY: ${{ secrets.BUTTONDOWN_API_KEY }}
         run: python scripts/check_races.py ${{ inputs.test_alert && '--test-alert' || '' }}
       - name: Commit updated live.json
         run: |

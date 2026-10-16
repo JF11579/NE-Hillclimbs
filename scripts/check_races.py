@@ -17,10 +17,12 @@ Usage:  python scripts/check_races.py            # update live.json + open issue
 """
 import datetime as dt
 import json
+import os
 import re
 import subprocess
 import sys
 import time
+import urllib.error
 import urllib.request
 from pathlib import Path
 
@@ -32,6 +34,7 @@ NE_STATES = {"NH", "VT", "ME", "MA", "NY", "NJ", "CT", "RI"}
 QUERIES = ["climb", "uphill", "whiteface", "rock pile", "killington"]
 CLIMB_RE = re.compile(r"hill ?climb|uphill|climb challenge", re.I)
 CLOSING_DAYS = 7
+SITE = "https://ne-hillclimbs-jf.netlify.app"
 UA = "Mozilla/5.0 (personal hill-climb calendar; github.com/JF11579)"
 OWNER = "@JF11579"
 
@@ -103,6 +106,35 @@ def check_movemint(race, year):
     return {"name": race["name"], "register": url, "source": "movemint"}
 
 
+def email_subscribers(new, dry_run, status="about_to_send"):
+    """Send one Buttondown email with all of today's alerts to the public sign-up list.
+    Skipped unless the BUTTONDOWN_API_KEY secret is set."""
+    key = os.environ.get("BUTTONDOWN_API_KEY")
+    if not new or not key:
+        return True
+    subject = new[0][1] if len(new) == 1 else f"{len(new)} Northeast hill climb updates"
+    body = "\n\n".join(f"## {title}\n\n{text}" for _, title, text in new)
+    body += f"\n\n---\n\nAll races and dates: {SITE}"
+    print(f"Buttondown ({status}): {subject}")
+    if dry_run:
+        return True
+    req = urllib.request.Request(
+        "https://api.buttondown.com/v1/emails", method="POST",
+        data=json.dumps({"subject": subject, "body": body, "status": status}).encode(),
+        headers={"Authorization": f"Token {key}", "Content-Type": "application/json",
+                 "X-Buttondown-Live-Dangerously": "true"})
+    try:
+        with urllib.request.urlopen(req, timeout=30) as resp:
+            print(f"  Buttondown accepted: HTTP {resp.status}")
+        return True
+    except urllib.error.HTTPError as e:
+        # Print Buttondown's reason; a bare status code hides the actionable message.
+        print(f"  Buttondown error {e.code}: {e.read().decode('utf-8', 'replace')}")
+    except urllib.error.URLError as e:
+        print(f"  Buttondown unreachable: {e}")
+    return False
+
+
 def open_issue(title, body, dry_run):
     print(f"ALERT: {title}")
     if dry_run:
@@ -121,9 +153,14 @@ def main():
         open_issue("🧪 Test alert from the hill-climb checker",
                    "If this arrived by email, alerts are working. You can close this issue."
                    f"\n\n---\n{OWNER} · sent by the daily hill-climb checker", dry_run)
+        # Subscribers get a draft only (visible in the Buttondown dashboard, never sent).
+        email_subscribers([("test", "🧪 Test: Northeast hill climb alert",
+                            "This is a draft created by the test run. Delete it in Buttondown.")],
+                          dry_run, status="draft") or sys.exit(1)
         return
     today = dt.date.today()
     races = json.loads(RACES.read_text())["races"]
+    mailed = True
     first_run = not LIVE.exists()
     live = json.loads(LIVE.read_text()) if not first_run else {"events": {}, "otherClimbs": {}, "sent": []}
     sent = set(live["sent"])
@@ -217,6 +254,7 @@ def main():
     else:
         for key, title, body in new:
             open_issue(title, f"{body}\n\n---\n{OWNER} · sent by the daily hill-climb checker", dry_run)
+        mailed = email_subscribers(new, dry_run)
     sent.update(k for k, _, _ in new)
     live["sent"] = sorted(sent)
     live["checked"] = dt.datetime.now(dt.timezone.utc).isoformat(timespec="minutes")
@@ -224,6 +262,8 @@ def main():
     if not dry_run:
         LIVE.write_text(json.dumps(live, indent=2, sort_keys=True) + "\n")
     print(f"Done: {ok} queries ok, {len(found)} NE events seen, {len(new)} new alert(s).")
+    if not mailed:
+        sys.exit("Subscriber email failed (see Buttondown error above); GitHub issues were still opened.")
 
 
 if __name__ == "__main__":
