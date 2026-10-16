@@ -162,7 +162,7 @@ details th { color: var(--ink); }
   <div class="foot">
     <h2>Email alerts</h2>
     <div class="panel">
-      A script runs every morning and checks BikeReg (and Movemint for Prospect). You get an email when:
+      A script runs every morning and checks BikeReg (and Movemint for Prospect). Sign up at the top of the page to get an email when:
       <ul>
         <li>a race posts next year's dates</li>
         <li>registration opens</li>
@@ -181,7 +181,7 @@ details th { color: var(--ink); }
 <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
 <script>
 // Buttondown newsletter username (Settings → General). The sign-up box stays hidden until it's set.
-const BUTTONDOWN_USER = "";
+const BUTTONDOWN_USER = "nehillclimbs";
 if (BUTTONDOWN_USER) {
   const f = document.getElementById("signup");
   f.action = "https://buttondown.com/api/emails/embed-subscribe/" + BUTTONDOWN_USER;
