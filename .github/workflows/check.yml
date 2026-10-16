@@ -4,6 +4,11 @@ on:
   schedule:
     - cron: "0 11 * * *"   # 7am Eastern (6am in winter)
   workflow_dispatch:
+    inputs:
+      test_alert:
+        description: "Just send a test alert email"
+        type: boolean
+        default: false
 
 permissions:
   contents: write
@@ -20,7 +25,7 @@ jobs:
       - name: Check BikeReg / Movemint and open alert issues
         env:
           GH_TOKEN: ${{ github.token }}
-        run: python scripts/check_races.py
+        run: python scripts/check_races.py ${{ inputs.test_alert && '--test-alert' || '' }}
       - name: Commit updated live.json
         run: |
           git config user.name "hillclimb-bot"

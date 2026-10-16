@@ -13,6 +13,7 @@ alert. GitHub emails the issue to the repo owner, so each issue is an email:
 
 Usage:  python scripts/check_races.py            # update live.json + open issues
         python scripts/check_races.py --dry-run  # print alerts, touch nothing
+        python scripts/check_races.py --test-alert  # open one test issue (email)
 """
 import datetime as dt
 import json
@@ -116,6 +117,11 @@ def fmt(d):
 
 def main():
     dry_run = "--dry-run" in sys.argv
+    if "--test-alert" in sys.argv:
+        open_issue("🧪 Test alert from the hill-climb checker",
+                   "If this arrived by email, alerts are working. You can close this issue."
+                   f"\n\n---\n{OWNER} · sent by the daily hill-climb checker", dry_run)
+        return
     today = dt.date.today()
     races = json.loads(RACES.read_text())["races"]
     first_run = not LIVE.exists()
