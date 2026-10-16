@@ -114,7 +114,7 @@
       "website": "https://www.mwarbh.org/",
       "register": "https://www.bikereg.com/rockpile",
       "organizer": "Tin Mountain Conservation Center",
-      "notes": "The July 'practice ride' on the Auto Road, about 150 riders, very early start. Besides race day in August, it's the only day bikes are allowed on the road. Good for previewing the course. Same organizer and registration timing as the August race.",
+      "notes": "The July 'practice ride' on the Auto Road, about 150 riders, very early start. Besides race day in August, it's the only day bikes are allowed on the road. Good for previewing the course. Same organizer and registration timing as the August race. With the race moving to June 19 in 2027, this ride's date may change too.",
       "match": "rock ?pile|early bird",
       "history": {
         "2026": {
@@ -173,7 +173,7 @@
       "website": "https://www.mwarbh.org/",
       "register": "https://www.bikereg.com/mwarbh",
       "organizer": "Tin Mountain Conservation Center",
-      "notes": "The big one. The field is capped at roughly 500–600 riders and fills fast. Riders with 10+ finishes get early access. No day-of registration. Riding down is prohibited, so your driver needs the Auto Pass from your bib. Rain date is Sunday.",
+      "notes": "MOVING TO JUNE for 2027: Sat June 19, 2027 (organizer email, 10/16/2026). Registration dates not posted yet; expect them earlier than usual. The field is capped at roughly 500–600 riders and fills fast. Riders with 10+ finishes get early access. No day-of registration. Riding down is prohibited, so your driver needs the Auto Pass from your bib.",
       "mine": "Rode it 8/15/2026: 2:16:18",
       "match": "mt\\.? washington auto road|mwarbh",
       "history": {
@@ -186,6 +186,9 @@
           "date": "2026-08-15",
           "regOpen": "2026-01-01",
           "regClose": "2026-08-10"
+        },
+        "2027": {
+          "date": "2027-06-19"
         }
       }
     },
