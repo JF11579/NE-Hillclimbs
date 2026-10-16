@@ -1,0 +1,29 @@
+name: Daily race check
+
+on:
+  schedule:
+    - cron: "0 11 * * *"   # 7am Eastern (6am in winter)
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  issues: write
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Check BikeReg / Movemint and open alert issues
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: python scripts/check_races.py
+      - name: Commit updated live.json
+        run: |
+          git config user.name "hillclimb-bot"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add data/live.json
+          git diff --cached --quiet || { git commit -m "Update live race data"; git push; }

@@ -1,0 +1,365 @@
+{
+  "_note": "Hand-curated race facts. 'history' = actual dates pulled from BikeReg's public API (Oct 2026). scripts/check_races.py adds newly announced seasons to data/live.json automatically.",
+  "races": [
+    {
+      "id": "high-point",
+      "name": "High Point Hill Climb TT",
+      "bumps": true,
+      "town": "Montague",
+      "state": "NJ",
+      "lat": 41.3209,
+      "lon": -74.6616,
+      "distance_mi": 5.6,
+      "gain_ft": 1511,
+      "avg_grade": 4.3,
+      "max_grade": 10,
+      "format": "Time trial",
+      "fee": "$50",
+      "website": "http://www.skylandscycling.com",
+      "register": "https://www.bikereg.com/high-point-hill-climb26",
+      "organizer": "Skylands Cycling",
+      "notes": "Season opener for BUMPS. Steady, gentle grade — a power climb, not a grinder. Registration closes a couple of days before.",
+      "match": "high point hill ?climb",
+      "history": {
+        "2025": {
+          "date": "2025-05-03",
+          "regOpen": "2025-03-01",
+          "regClose": "2025-05-02"
+        },
+        "2026": {
+          "date": "2026-05-02",
+          "regOpen": "2026-02-18",
+          "regClose": "2026-04-30"
+        }
+      }
+    },
+    {
+      "id": "crank-the-kanc",
+      "name": "Crank the Kanc Hillclimb",
+      "bumps": true,
+      "town": "Conway",
+      "state": "NH",
+      "lat": 44.0003,
+      "lon": -71.5024,
+      "distance_mi": 21.3,
+      "gain_ft": 2340,
+      "avg_grade": 2.2,
+      "max_grade": 9,
+      "format": "Mass start (TT option)",
+      "fee": "$75",
+      "website": "https://crankthekanc.org",
+      "register": "https://www.bikereg.com/crank-the-kanc-hillclimb",
+      "organizer": "Mt Washington Valley Bicycling Club",
+      "notes": "Long, mostly gradual climb up the Kancamagus Highway to the pass; the steep part is at the end. Registration closes about a week early (no late entries).",
+      "match": "crank the kanc",
+      "history": {
+        "2025": {
+          "date": "2025-05-17",
+          "regOpen": "2025-03-08",
+          "regClose": "2025-05-11"
+        },
+        "2026": {
+          "date": "2026-05-16",
+          "regOpen": "2026-03-07",
+          "regClose": "2026-05-10"
+        }
+      }
+    },
+    {
+      "id": "whiteface",
+      "name": "Whiteface Mountain Uphill Bike Race",
+      "bumps": true,
+      "town": "Wilmington",
+      "state": "NY",
+      "lat": 44.3659,
+      "lon": -73.9026,
+      "distance_mi": 8,
+      "gain_ft": 3500,
+      "avg_grade": 8.3,
+      "max_grade": 10,
+      "format": "Mass start",
+      "fee": "$60–$100 (price rises closer to race day)",
+      "website": "https://www.whitefaceregion.com/do/events/whiteface-mountain-uphill-bike-race",
+      "register": "https://www.bikereg.com/whiteface-mountain-23rd-annual-uphill-bike-race",
+      "organizer": "Whiteface Mountain Regional Visitors Bureau",
+      "notes": "Veterans' Memorial Highway to the Castle. You need your own ride down. Price tiers go up over time, so register early. For 2025, registration opened in November 2024, so 2027 could open any week now.",
+      "match": "whiteface.*uphill",
+      "history": {
+        "2025": {
+          "date": "2025-06-07",
+          "regOpen": "2024-11-08",
+          "regClose": "2025-06-05"
+        },
+        "2026": {
+          "date": "2026-06-06",
+          "regOpen": "2026-02-10",
+          "regClose": "2026-06-04"
+        }
+      }
+    },
+    {
+      "id": "rock-pile",
+      "name": "Ride the Rock Pile (Mt Washington Early Bird ride)",
+      "bumps": false,
+      "town": "Gorham",
+      "state": "NH",
+      "lat": 44.2706,
+      "lon": -71.3033,
+      "distance_mi": 7.6,
+      "gain_ft": 4678,
+      "avg_grade": 12,
+      "max_grade": 22,
+      "format": "Untimed ride (not a race)",
+      "fee": "$150",
+      "website": "https://www.mwarbh.org/",
+      "register": "https://www.bikereg.com/rockpile",
+      "organizer": "Tin Mountain Conservation Center",
+      "notes": "The July 'practice ride' on the Auto Road, about 150 riders, very early start. Besides race day in August, it's the only day bikes are allowed on the road. Good for previewing the course. Same organizer and registration timing as the August race.",
+      "match": "rock ?pile|early bird",
+      "history": {
+        "2026": {
+          "date": "2026-07-18",
+          "regOpen": "2026-01-01",
+          "regClose": "2026-07-18"
+        }
+      }
+    },
+    {
+      "id": "kearsarge",
+      "name": "Mt. Kearsarge Hill Climb",
+      "bumps": true,
+      "town": "Warner",
+      "state": "NH",
+      "lat": 43.3834,
+      "lon": -71.8573,
+      "distance_mi": 7.7,
+      "gain_ft": 2156,
+      "avg_grade": 5.3,
+      "max_grade": 15,
+      "format": "Mass start",
+      "fee": "$45",
+      "website": "https://www.grvl.net/mt-kearsarge-hill-climb",
+      "register": "https://www.bikereg.com/mkhc",
+      "organizer": "GRVL Cycling",
+      "notes": "Rollout from Warner, then up to Rollins State Park on the south side of Kearsarge.",
+      "match": "kearsarge",
+      "history": {
+        "2025": {
+          "date": "2025-08-10",
+          "regOpen": "2025-03-29",
+          "regClose": "2025-08-08"
+        },
+        "2026": {
+          "date": "2026-08-09",
+          "regOpen": "2026-04-04",
+          "regClose": "2026-08-07"
+        }
+      }
+    },
+    {
+      "id": "mt-washington",
+      "name": "Mt. Washington Auto Road Bicycle Hillclimb",
+      "bumps": true,
+      "town": "Gorham",
+      "state": "NH",
+      "lat": 44.258,
+      "lon": -71.255,
+      "distance_mi": 7.6,
+      "gain_ft": 4678,
+      "avg_grade": 12,
+      "max_grade": 22,
+      "format": "Wave start by age group",
+      "fee": "$150 standard (higher fundraising tiers)",
+      "website": "https://www.mwarbh.org/",
+      "register": "https://www.bikereg.com/mwarbh",
+      "organizer": "Tin Mountain Conservation Center",
+      "notes": "The big one. The field is capped at roughly 500–600 riders and fills fast. Riders with 10+ finishes get early access. No day-of registration. Riding down is prohibited, so your driver needs the Auto Pass from your bib. Rain date is Sunday.",
+      "mine": "Rode it 8/15/2026: 2:16:18",
+      "match": "mt\\.? washington auto road|mwarbh",
+      "history": {
+        "2025": {
+          "date": "2025-08-16",
+          "regOpen": "2025-02-25",
+          "regClose": "2025-08-15"
+        },
+        "2026": {
+          "date": "2026-08-15",
+          "regOpen": "2026-01-01",
+          "regClose": "2026-08-10"
+        }
+      }
+    },
+    {
+      "id": "ascutney",
+      "name": "Mt. Ascutney Bicycle Hillclimb",
+      "bumps": true,
+      "town": "Windsor",
+      "state": "VT",
+      "lat": 43.441,
+      "lon": -72.45,
+      "distance_mi": 3.7,
+      "gain_ft": 2279,
+      "avg_grade": 12.4,
+      "max_grade": 19,
+      "format": "Mass start",
+      "fee": "$45",
+      "website": "https://www.ascutneytrails.com/",
+      "register": "https://www.bikereg.com/ascutney-hillclimb-2026",
+      "organizer": "Ascutney Trails Association",
+      "notes": "Short and brutal: the state park road averages 12%+ and is closed to traffic. The date moves around: Aug 2 in 2025, Sep 5 in 2026. Registration has opened late (May–June).",
+      "match": "ascutney.*hill ?climb",
+      "history": {
+        "2025": {
+          "date": "2025-08-02",
+          "regOpen": "2025-05-09",
+          "regClose": "2025-08-01"
+        },
+        "2026": {
+          "date": "2026-09-05",
+          "regOpen": "2026-06-10",
+          "regClose": "2026-09-04"
+        }
+      }
+    },
+    {
+      "id": "greylock",
+      "name": "Mount Greylock Hill Climb TT",
+      "bumps": true,
+      "town": "North Adams",
+      "state": "MA",
+      "lat": 42.6376,
+      "lon": -73.1662,
+      "distance_mi": 9,
+      "gain_ft": 2805,
+      "avg_grade": 5.7,
+      "max_grade": 12,
+      "format": "Time trial",
+      "fee": "$80 ($20 juniors)",
+      "website": "https://www.nohobikeclub.org/greylock-hillclimb",
+      "register": "https://www.bikereg.com/greylock",
+      "organizer": "Northampton Cycling Club",
+      "notes": "Up Notch Road from North Adams to the summit of the highest point in Massachusetts. Registration closes about 5 days early.",
+      "match": "greylock",
+      "history": {
+        "2025": {
+          "date": "2025-09-06",
+          "regOpen": "2025-04-14",
+          "regClose": "2025-09-01"
+        },
+        "2026": {
+          "date": "2026-09-12",
+          "regOpen": "2026-04-20",
+          "regClose": "2026-09-06"
+        }
+      }
+    },
+    {
+      "id": "prospect",
+      "name": "Prospect Mountain Hill Climb",
+      "bumps": true,
+      "town": "Lake George",
+      "state": "NY",
+      "lat": 43.43,
+      "lon": -73.747,
+      "distance_mi": 5.7,
+      "gain_ft": 1610,
+      "avg_grade": 5.3,
+      "max_grade": 10,
+      "format": "Mass start",
+      "fee": "~$33",
+      "website": "https://www.unifycyclingny.com",
+      "register": "https://www.movemint.cc/events/prospect_2026",
+      "organizer": "Unify Cycling",
+      "notes": "Veterans Memorial Highway above Lake George. Proceeds support veterans. Registration moved from BikeReg to Movemint in 2026.",
+      "match": "prospect mountain hill ?climb",
+      "movemint": "prospect_{year}",
+      "history": {
+        "2025": {
+          "date": "2025-09-13",
+          "regOpen": "2025-04-01",
+          "regClose": "2025-09-10"
+        },
+        "2026": {
+          "date": "2026-09-19"
+        }
+      }
+    },
+    {
+      "id": "allen-clark",
+      "name": "Allen Clark Hill Climb (App Gap)",
+      "bumps": true,
+      "town": "Waitsfield",
+      "state": "VT",
+      "lat": 44.214,
+      "lon": -72.933,
+      "distance_mi": 6.2,
+      "gain_ft": 1600,
+      "avg_grade": 5,
+      "max_grade": 13,
+      "format": "Mass start",
+      "fee": "$50–60",
+      "website": "http://achillclimb.org",
+      "register": "https://www.bikereg.com/allen-clark-hill-climb",
+      "organizer": "Vermont Adaptive Ski & Sports",
+      "notes": "BUMPS finale, up Route 17 to Appalachian Gap in peak foliage season. A fundraiser for Vermont Adaptive.",
+      "match": "allen clark",
+      "history": {
+        "2025": {
+          "date": "2025-10-05",
+          "regOpen": "2025-06-24",
+          "regClose": "2025-10-03"
+        },
+        "2026": {
+          "date": "2026-10-04",
+          "regOpen": "2026-07-23",
+          "regClose": "2026-10-02"
+        }
+      }
+    },
+    {
+      "id": "tinneys",
+      "name": "Tinney's Hill Climb Challenge",
+      "bumps": false,
+      "town": "Middle Grove",
+      "state": "NY",
+      "lat": 43.1323,
+      "lon": -73.9708,
+      "distance_mi": null,
+      "gain_ft": null,
+      "avg_grade": null,
+      "max_grade": null,
+      "format": "Hill climb",
+      "fee": "$20",
+      "website": "https://ridewithgps.com/events/502496-tinney-s-hill-climb-challenge",
+      "register": "https://www.bikereg.com/tinneys-hill-climb-challenge",
+      "organizer": "Saratoga Cycling Club & Elevate Cycles",
+      "notes": "Small, cheap end-of-season climb near Saratoga. First edition found on BikeReg in 2026.",
+      "match": "tinney",
+      "history": {
+        "2026": {
+          "date": "2026-10-18",
+          "regOpen": "2026-09-14",
+          "regClose": "2026-10-17"
+        }
+      }
+    }
+  ],
+  "notFound": [
+    {
+      "name": "Killington",
+      "note": "Couldn't find a current road hill climb at Killington. Its bike events are downhill and MTB (Bike Bum series). If one gets posted on BikeReg, the daily checker will flag it as a new Northeast hill climb."
+    },
+    {
+      "name": "Mt. Equinox (VT)",
+      "note": "The bike climb appears to be discontinued. The 2026 Equinox hill climb is a vintage car event."
+    },
+    {
+      "name": "Newton's Revenge (Mt Washington, July)",
+      "note": "No longer listed. The July Auto Road event is now the untimed Early Bird / Ride the Rock Pile (above)."
+    },
+    {
+      "name": "Burke, Okemo (VT)",
+      "note": "Former BUMPS climbs. The 2026 Burke and Okemo hill climbs are car events (NEHA). No bike race was found."
+    }
+  ]
+}

@@ -1,0 +1,316 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Northeast Hill Climbs</title>
+<meta name="description" content="Race days and registration windows for Northeast bike hill climbs, including the BUMPS series.">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><path d='M5 90 L40 25 L55 50 L68 32 L95 90 Z' fill='%232f6f4e'/></svg>">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css">
+<style>
+:root {
+  --bg: #f6f5f1; --card: #ffffff; --ink: #1d2320; --muted: #66706b; --line: #e2e0d9;
+  --accent: #2f6f4e; --accent-soft: #e3efe8;
+  --open: #1f7a3f; --open-bg: #ddf3e3;
+  --soon: #1d5fa8; --soon-bg: #e0ecfa;
+  --warn: #a8550d; --warn-bg: #fcebd9;
+  --idle: #6b6f6d; --idle-bg: #ecece8;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #141816; --card: #1d2320; --ink: #e9ece9; --muted: #9aa49f; --line: #2e3532;
+    --accent: #6cc196; --accent-soft: #23362c;
+    --open: #7fdc9c; --open-bg: #1d3a26; --soon: #8cbcf2; --soon-bg: #1c2d44;
+    --warn: #f1b06f; --warn-bg: #43301c; --idle: #a3a8a5; --idle-bg: #2a2f2c;
+  }
+}
+* { box-sizing: border-box; }
+body { margin: 0; background: var(--bg); color: var(--ink);
+  font: 15px/1.45 -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
+a { color: var(--accent); }
+.wrap { max-width: 1100px; margin: 0 auto; padding: 0 16px 48px; }
+header { padding: 22px 0 10px; }
+h1 { margin: 0; font-size: 26px; letter-spacing: -0.01em; }
+.sub { color: var(--muted); margin-top: 4px; font-size: 14px; }
+h2 { font-size: 13px; text-transform: uppercase; letter-spacing: .08em; color: var(--muted); margin: 26px 0 10px; }
+
+.top { display: grid; grid-template-columns: 1fr 1.25fr; gap: 16px; }
+@media (max-width: 800px) { .top { grid-template-columns: 1fr; } }
+.panel { background: var(--card); border: 1px solid var(--line); border-radius: 12px; }
+#map { height: 360px; border-radius: 12px; z-index: 0; }
+.upcoming { padding: 6px 0; }
+.up { display: grid; grid-template-columns: 64px 1fr; gap: 10px; padding: 9px 14px; border-bottom: 1px solid var(--line); align-items: center; }
+.up:last-child { border-bottom: 0; }
+.up .when { text-align: center; line-height: 1.1; }
+.up .when b { display: block; font-size: 20px; }
+.up .when span { font-size: 11px; text-transform: uppercase; color: var(--muted); letter-spacing: .05em; }
+.up .what { font-size: 14px; }
+.up .what small { display: block; color: var(--muted); }
+.est { color: var(--muted); font-style: italic; }
+
+.filters { display: flex; gap: 8px; flex-wrap: wrap; }
+.chipbtn { border: 1px solid var(--line); background: var(--card); color: var(--ink); padding: 6px 12px; border-radius: 999px; cursor: pointer; font-size: 13px; }
+.chipbtn[aria-pressed="true"] { background: var(--accent); border-color: var(--accent); color: #fff; }
+
+.cards { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 14px; margin-top: 12px; }
+@media (max-width: 400px) { .cards { grid-template-columns: 1fr; } }
+.card { padding: 16px; display: flex; flex-direction: column; gap: 10px; scroll-margin-top: 12px; }
+.card.flash { outline: 2px solid var(--accent); }
+.card h3 { margin: 0; font-size: 17px; line-height: 1.25; }
+.where { color: var(--muted); font-size: 13px; }
+.tags { display: flex; gap: 6px; flex-wrap: wrap; }
+.tag { font-size: 11.5px; font-weight: 600; padding: 3px 8px; border-radius: 6px; }
+.tag.bumps { background: var(--accent-soft); color: var(--accent); }
+.st-open { background: var(--open-bg); color: var(--open); }
+.st-soon { background: var(--soon-bg); color: var(--soon); }
+.st-warn { background: var(--warn-bg); color: var(--warn); }
+.st-idle { background: var(--idle-bg); color: var(--idle); }
+.dates { display: grid; grid-template-columns: auto 1fr; gap: 3px 14px; font-size: 14px; }
+.dates dt { color: var(--muted); }
+.dates dd { margin: 0; }
+.stats { display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px; text-align: center; background: var(--bg); border-radius: 8px; padding: 8px 4px; }
+.stats b { display: block; font-size: 15px; }
+.stats span { font-size: 11px; color: var(--muted); }
+.notes { font-size: 13.5px; margin: 0; }
+.mine { font-size: 13px; color: var(--accent); font-weight: 600; }
+.links { display: flex; gap: 8px; flex-wrap: wrap; margin-top: auto; }
+.btn { font-size: 13px; text-decoration: none; padding: 6px 11px; border-radius: 8px; border: 1px solid var(--line); color: var(--ink); background: var(--card); }
+.btn.primary { background: var(--accent); border-color: var(--accent); color: #fff; }
+details { font-size: 13px; color: var(--muted); }
+details table { border-collapse: collapse; margin-top: 6px; width: 100%; }
+details td, details th { text-align: left; padding: 3px 6px 3px 0; font-weight: normal; }
+details th { color: var(--ink); }
+.foot { font-size: 14px; }
+.foot .panel { padding: 14px 16px; margin-bottom: 12px; }
+.foot ul { margin: 6px 0 0; padding-left: 18px; }
+.foot li { margin: 4px 0; }
+.leaflet-popup-content { font: 13px/1.4 -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <h1>Northeast Hill Climbs</h1>
+    <div class="sub" id="sub">Loading…</div>
+  </header>
+
+  <div class="top">
+    <section>
+      <h2>Coming up</h2>
+      <div class="panel upcoming" id="upcoming"></div>
+    </section>
+    <section>
+      <h2>Map</h2>
+      <div class="panel"><div id="map"></div></div>
+    </section>
+  </div>
+
+  <h2>Races</h2>
+  <div class="filters">
+    <button class="chipbtn" data-f="all" aria-pressed="true">All races</button>
+    <button class="chipbtn" data-f="bumps" aria-pressed="false">BUMPS series only</button>
+    <button class="chipbtn" data-f="open" aria-pressed="false">Registration open</button>
+  </div>
+  <div class="cards" id="cards"></div>
+
+  <div class="foot">
+    <h2>Email alerts</h2>
+    <div class="panel">
+      A script runs every morning and checks BikeReg (and Movemint for Prospect). You get an email when:
+      <ul>
+        <li>a race posts next year's dates</li>
+        <li>registration opens</li>
+        <li>registration closes in 7 days</li>
+        <li>a race changes its dates</li>
+        <li>a new Northeast hill climb appears on BikeReg</li>
+      </ul>
+      <div class="sub" id="checked"></div>
+    </div>
+    <h2>Looked for, not found</h2>
+    <div class="panel" id="notfound"></div>
+    <div class="sub">Dates marked <span class="est">≈ estimated</span> are projected from last year (same weekend). The race hasn't posted them yet. Map pins mark the climbs (approximate).</div>
+  </div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
+<script>
+const DAY = 864e5;
+const today = new Date(new Date().toDateString());
+const parse = s => s ? new Date(s + "T00:00:00") : null;
+const iso = d => d.getFullYear() + "-" + String(d.getMonth() + 1).padStart(2, "0") + "-" + String(d.getDate()).padStart(2, "0");
+const fmt = (d, opts = { weekday: "short", month: "short", day: "numeric", year: "numeric" }) => d.toLocaleDateString("en-US", opts);
+const esc = s => String(s ?? "").replace(/[&<>"]/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
+
+// Move a past date into `year`. Race days keep their weekday (nearest same weekday to the
+// same calendar date); registration dates just keep the calendar date.
+function project(d, year, keepWeekday) {
+  const t = new Date(year, d.getMonth(), d.getDate());
+  if (!keepWeekday) return t;
+  let diff = (d.getDay() - t.getDay() + 7) % 7;
+  if (diff > 3) diff -= 7;
+  return new Date(t.getTime() + diff * DAY);
+}
+
+function seasonFor(race, live) {
+  const seasons = { ...race.history };
+  for (const [y, info] of Object.entries(live.events?.[race.id] || {})) seasons[y] = { ...seasons[y], ...info };
+  const years = Object.keys(seasons).sort();
+  // The upcoming season: the first year whose race day hasn't passed.
+  for (const y of years) {
+    const d = parse(seasons[y].date);
+    if (d && d >= today) return { year: +y, real: true, ...pick(seasons[y]), info: seasons[y], seasons };
+  }
+  // Otherwise project next season from the most recent year that has each field.
+  const lastYear = +years[years.length - 1];
+  const target = Math.max(lastYear + 1, today.getFullYear());
+  const field = k => {
+    for (const y of [...years].reverse()) if (seasons[y][k]) {
+      const d = parse(seasons[y][k]);
+      return project(d, d.getFullYear() + (target - +y), k === "date");
+    }
+    return null;
+  };
+  const posted = seasons[target]; // e.g. Movemint page exists but no dates
+  return { year: target, real: false, date: field("date"), regOpen: field("regOpen"), regClose: field("regClose"), info: posted || {}, seasons };
+}
+const pick = s => ({ date: parse(s.date), regOpen: parse(s.regOpen), regClose: parse(s.regClose) });
+
+function status(s) {
+  if (!s.real) return s.info.register ? ["Posted — dates TBA", "st-soon"] : [`${s.year} not posted yet`, "st-idle"];
+  if (!s.regOpen) return ["Dates posted", "st-soon"];
+  if (today < s.regOpen) return [`Registration opens ${fmt(s.regOpen, { month: "short", day: "numeric" })}`, "st-soon"];
+  if (s.regClose && today <= s.regClose) {
+    const left = Math.round((s.regClose - today) / DAY);
+    return left <= 7 ? [`Closing in ${left} day${left === 1 ? "" : "s"}!`, "st-warn"] : ["Registration OPEN", "st-open"];
+  }
+  return ["Registration closed", "st-idle"];
+}
+
+function gcal(title, d, details) {
+  const a = iso(d).replaceAll("-", ""), b = iso(new Date(d.getTime() + DAY)).replaceAll("-", "");
+  return "https://calendar.google.com/calendar/render?action=TEMPLATE&text=" + encodeURIComponent(title) +
+    "&dates=" + a + "/" + b + "&details=" + encodeURIComponent(details);
+}
+
+function dateCell(d, real) {
+  if (!d) return '<span class="est">TBA</span>';
+  return real ? fmt(d) : `<span class="est">≈ ${fmt(d, { month: "short", day: "numeric", year: "numeric" })}</span>`;
+}
+
+let RACES = [], filter = "all", markers = {};
+
+function render() {
+  const cards = document.getElementById("cards");
+  const list = RACES.filter(r => filter === "all" || (filter === "bumps" && r.bumps) ||
+    (filter === "open" && ["st-open", "st-warn"].includes(r.st[1])));
+  cards.innerHTML = list.length ? list.map(card).join("") : '<div class="sub">Nothing matches right now.</div>';
+}
+
+function card(r) {
+  const s = r.s;
+  const reg = s.info.register || r.register;
+  const stat = (v, u) => v == null ? "—" : v + u;
+  const hist = Object.keys(s.seasons).sort().reverse().map(y => {
+    const h = s.seasons[y], f = k => h[k] ? fmt(parse(h[k]), { month: "short", day: "numeric" }) : "—";
+    return `<tr><td>${y}</td><td>${f("date")}</td><td>${f("regOpen")}</td><td>${f("regClose")}</td></tr>`;
+  }).join("");
+  const calLinks = [];
+  if (s.date) calLinks.push(`<a class="btn" target="_blank" rel="noopener" href="${gcal(r.name + (s.real ? "" : " (est.)"), s.date, reg)}">+ Race day</a>`);
+  if (s.regOpen && s.regOpen >= today) calLinks.push(`<a class="btn" target="_blank" rel="noopener" href="${gcal("Reg opens: " + r.name + (s.real ? "" : " (est.)"), s.regOpen, reg)}">+ Reg opens</a>`);
+  return `<article class="card panel" id="r-${r.id}">
+    <div>
+      <h3>${esc(r.name)}</h3>
+      <div class="where">${esc(r.town)}, ${r.state} · ${esc(r.format)} · ${esc(r.fee)}</div>
+    </div>
+    <div class="tags">${r.bumps ? '<span class="tag bumps">BUMPS</span>' : ""}<span class="tag ${r.st[1]}">${esc(r.st[0])}</span></div>
+    <dl class="dates">
+      <dt>${s.year} race day</dt><dd>${dateCell(s.date, s.real)}</dd>
+      <dt>Registration opens</dt><dd>${dateCell(s.regOpen, s.real && s.regOpen)}</dd>
+      <dt>Registration closes</dt><dd>${dateCell(s.regClose, s.real && s.regClose)}</dd>
+    </dl>
+    <div class="stats">
+      <div><b>${stat(r.distance_mi, " mi")}</b><span>distance</span></div>
+      <div><b>${r.gain_ft == null ? "—" : r.gain_ft.toLocaleString() + "′"}</b><span>climbing</span></div>
+      <div><b>${stat(r.avg_grade, "%")}</b><span>avg grade</span></div>
+      <div><b>${stat(r.max_grade, "%")}</b><span>max</span></div>
+    </div>
+    <p class="notes">${esc(r.notes)}</p>
+    ${r.mine ? `<div class="mine">★ ${esc(r.mine)}</div>` : ""}
+    <details><summary>Past years</summary>
+      <table><tr><th>Year</th><th>Race</th><th>Reg opened</th><th>Reg closed</th></tr>${hist}</table>
+    </details>
+    <div class="links">
+      <a class="btn primary" target="_blank" rel="noopener" href="${esc(reg)}">Registration</a>
+      <a class="btn" target="_blank" rel="noopener" href="${esc(r.website)}">Race site</a>
+      ${calLinks.join("")}
+    </div>
+  </article>`;
+}
+
+function upcoming() {
+  const items = [];
+  for (const r of RACES) {
+    const s = r.s;
+    if (s.date) items.push({ d: s.date, real: s.real, r, label: "Race day" });
+    if (s.regOpen) items.push({ d: s.regOpen, real: s.real, r, label: "Registration opens" });
+    if (s.regClose && s.real) items.push({ d: s.regClose, real: s.real, r, label: "Registration closes" });
+  }
+  const next = items.filter(i => i.d >= today).sort((a, b) => a.d - b.d).slice(0, 8);
+  document.getElementById("upcoming").innerHTML = next.map(i => `
+    <div class="up">
+      <div class="when ${i.real ? "" : "est"}"><span>${fmt(i.d, { month: "short" })}</span><b>${i.real ? "" : "≈"}${i.d.getDate()}</b><span>${i.d.getFullYear()}</span></div>
+      <div class="what"><a href="#r-${i.r.id}" data-jump="${i.r.id}">${esc(i.r.name)}</a>
+        <small>${i.label}${i.real ? "" : " · estimated from last year"}</small></div>
+    </div>`).join("");
+}
+
+function map() {
+  const m = L.map("map", { scrollWheelZoom: false }).setView([43.4, -72.6], 6);
+  L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
+    maxZoom: 13, attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'
+  }).addTo(m);
+  const group = [];
+  for (const r of RACES) {
+    const color = { "st-open": "#1f7a3f", "st-warn": "#c2620f", "st-soon": "#1d5fa8" }[r.st[1]] || "#2f6f4e";
+    const mk = L.circleMarker([r.lat, r.lon], { radius: 8, color: "#fff", weight: 2, fillColor: color, fillOpacity: 1 })
+      .addTo(m).bindPopup(`<b>${esc(r.name)}</b><br>${r.s.date ? (r.s.real ? "" : "≈ ") + fmt(r.s.date) : "TBA"}<br>${esc(r.st[0])}<br><a href="#r-${r.id}" data-jump="${r.id}">Details ↓</a>`);
+    group.push([r.lat, r.lon]);
+    markers[r.id] = mk;
+  }
+  m.fitBounds(group, { padding: [24, 24] });
+}
+
+document.addEventListener("click", e => {
+  const j = e.target.closest("[data-jump]");
+  if (j) {
+    const el = document.getElementById("r-" + j.dataset.jump);
+    if (!el) { filter = "all"; syncFilters(); render(); }
+    const card = document.getElementById("r-" + j.dataset.jump);
+    e.preventDefault();
+    card.scrollIntoView({ behavior: "smooth", block: "start" });
+    card.classList.add("flash"); setTimeout(() => card.classList.remove("flash"), 1600);
+  }
+  const f = e.target.closest("[data-f]");
+  if (f) { filter = f.dataset.f; syncFilters(); render(); }
+});
+const syncFilters = () => document.querySelectorAll("[data-f]").forEach(b => b.setAttribute("aria-pressed", b.dataset.f === filter));
+
+(async () => {
+  const [races, live] = await Promise.all([
+    fetch("data/races.json", { cache: "no-store" }).then(r => r.json()),
+    fetch("data/live.json", { cache: "no-store" }).then(r => r.ok ? r.json() : {}).catch(() => ({})),
+  ]);
+  RACES = races.races.map(r => { const s = seasonFor(r, live); return { ...r, s, st: status(s) }; })
+    .sort((a, b) => (a.s.date || 0) - (b.s.date || 0));
+  const nBumps = RACES.filter(r => r.bumps).length;
+  document.getElementById("sub").textContent =
+    `${RACES.length} climbs tracked · ${nBumps} in the BUMPS series · Today is ${fmt(today)}`;
+  if (live.checked) document.getElementById("checked").textContent =
+    "Last checked: " + new Date(live.checked).toLocaleString("en-US", { dateStyle: "medium", timeStyle: "short" });
+  document.getElementById("notfound").innerHTML = (races.notFound || []).map(n =>
+    `<div style="margin:4px 0"><b>${esc(n.name)}</b>: ${esc(n.note)}</div>`).join("");
+  upcoming(); render(); map();
+})();
+</script>
+</body>
+</html>

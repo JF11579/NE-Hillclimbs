@@ -1,0 +1,207 @@
+{
+  "checked": "2026-10-16T15:33+00:00",
+  "events": {
+    "allen-clark": {
+      "2026": {
+        "date": "2026-10-04",
+        "eventId": 77267,
+        "fees": [
+          30,
+          50,
+          60
+        ],
+        "name": "Allen Clark Hill Climb",
+        "regClose": "2026-10-02",
+        "regOpen": "2026-07-23",
+        "register": "https://www.bikereg.com/77267",
+        "source": "bikereg",
+        "state": "VT",
+        "town": "Waitsfield",
+        "website": "http://achillclimb.org"
+      }
+    },
+    "ascutney": {
+      "2026": {
+        "date": "2026-09-05",
+        "eventId": 76617,
+        "fees": [
+          45
+        ],
+        "name": "Mt. Ascutney Bicycle Hillclimb 2026",
+        "regClose": "2026-09-04",
+        "regOpen": "2026-06-10",
+        "register": "https://www.bikereg.com/76617",
+        "source": "bikereg",
+        "state": "VT",
+        "town": "Windsor",
+        "website": "https://www.ascutneytrails.com/"
+      }
+    },
+    "crank-the-kanc": {
+      "2026": {
+        "date": "2026-05-16",
+        "eventId": 74181,
+        "fees": [
+          75,
+          150,
+          225
+        ],
+        "name": "Crank the Kanc Hillclimb 2026",
+        "regClose": "2026-05-10",
+        "regOpen": "2026-03-07",
+        "register": "https://www.bikereg.com/74181",
+        "source": "bikereg",
+        "state": "NH",
+        "town": "Conway",
+        "website": "https://crankthekanc.org"
+      }
+    },
+    "greylock": {
+      "2026": {
+        "date": "2026-09-12",
+        "eventId": 75355,
+        "fees": [
+          20,
+          80,
+          100
+        ],
+        "name": "Mount Greylock Hill Climb Time Trial 2026",
+        "regClose": "2026-09-06",
+        "regOpen": "2026-04-20",
+        "register": "https://www.bikereg.com/75355",
+        "source": "bikereg",
+        "state": "MA",
+        "town": "North Adams",
+        "website": "https://www.nohobikeclub.org/greylock-hillclimb"
+      }
+    },
+    "high-point": {
+      "2026": {
+        "date": "2026-05-02",
+        "eventId": 74905,
+        "fees": [
+          50
+        ],
+        "name": "2026 High Point Hill Climb TT",
+        "regClose": "2026-04-30",
+        "regOpen": "2026-02-18",
+        "register": "https://www.bikereg.com/74905",
+        "source": "bikereg",
+        "state": "NJ",
+        "town": "Montague",
+        "website": "http://www.skylandscycling.com"
+      }
+    },
+    "kearsarge": {
+      "2026": {
+        "date": "2026-08-09",
+        "eventId": 75626,
+        "fees": [
+          45,
+          85
+        ],
+        "name": "Mt. Kearsarge Hill Climb Race",
+        "regClose": "2026-08-07",
+        "regOpen": "2026-04-04",
+        "register": "https://www.bikereg.com/75626",
+        "source": "bikereg",
+        "state": "NH",
+        "town": "Warner",
+        "website": "https://www.grvl.net/mt-kearsarge-hill-climb"
+      }
+    },
+    "mt-washington": {
+      "2026": {
+        "date": "2026-08-15",
+        "eventId": 73472,
+        "fees": [
+          150,
+          350
+        ],
+        "name": "2026 Mt. Washington Auto Road Bicycle Hillclimb",
+        "regClose": "2026-08-10",
+        "regOpen": "2026-01-01",
+        "register": "https://www.bikereg.com/73472",
+        "source": "bikereg",
+        "state": "NH",
+        "town": "Gorham",
+        "website": "http://www.mwarbh.org/"
+      }
+    },
+    "rock-pile": {
+      "2026": {
+        "date": "2026-07-18",
+        "eventId": 73475,
+        "fees": [
+          150
+        ],
+        "name": "Ride The Rock Pile (Mt. Washington 2026)",
+        "regClose": "2026-07-18",
+        "regOpen": "2026-01-01",
+        "register": "https://www.bikereg.com/73475",
+        "source": "bikereg",
+        "state": "NH",
+        "town": "Gorham",
+        "website": "https://www.mwarbh.org/"
+      }
+    },
+    "tinneys": {
+      "2026": {
+        "date": "2026-10-18",
+        "eventId": 77875,
+        "fees": [
+          20
+        ],
+        "name": "Tinney's Hill Climb Challenge",
+        "regClose": "2026-10-17",
+        "regOpen": "2026-09-14",
+        "register": "https://www.bikereg.com/77875",
+        "source": "bikereg",
+        "state": "NY",
+        "town": "Middle Grove",
+        "website": "https://ridewithgps.com/events/502496-tinney-s-hill-climb-challenge"
+      }
+    },
+    "whiteface": {
+      "2026": {
+        "date": "2026-06-06",
+        "eventId": 74800,
+        "fees": [
+          60,
+          80,
+          100
+        ],
+        "name": "Whiteface Mountain 23rd Annual Uphill Bike Race",
+        "regClose": "2026-06-04",
+        "regOpen": "2026-02-10",
+        "register": "https://www.bikereg.com/74800",
+        "source": "bikereg",
+        "state": "NY",
+        "town": "Wilmington",
+        "website": "https://www.whitefaceregion.com/do/events/whiteface-mountain-uphill-bike-race"
+      }
+    }
+  },
+  "otherClimbs": {
+    "74847": {
+      "date": "2026-07-18",
+      "eventId": 74847,
+      "fees": [
+        35
+      ],
+      "name": "Tour De Glaze- Uphill Mountain Bike Race",
+      "regClose": "2026-07-18",
+      "regOpen": "2026-02-12",
+      "register": "https://www.bikereg.com/74847",
+      "source": "bikereg",
+      "state": "VT",
+      "town": "Stratton",
+      "website": "https://www.stratton.com/"
+    }
+  },
+  "sent": [
+    "other-74847",
+    "tinneys-2026-closing",
+    "tinneys-2026-open"
+  ]
+}
