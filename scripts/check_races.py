@@ -148,7 +148,9 @@ def main():
                 continue
             matched_ids.add(e["EventId"])
             prev = live["events"].get(race["id"], {}).get(year)
-            known = year in race.get("history", {}) or prev is not None
+            # A hand-entered date (e.g. from an organizer email) without reg dates still
+            # counts as "not posted", so we alert once BikeReg has the real event.
+            known = prev is not None or "regOpen" in race.get("history", {}).get(year, {})
             if not known:
                 alerts.append((f"{race['id']}-{year}-announced",
                                f"📅 {race['name']} {year} is posted",
