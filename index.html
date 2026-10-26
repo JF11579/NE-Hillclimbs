@@ -227,11 +227,16 @@ function seasonFor(race, live) {
   const posted = seasons[target]; // e.g. Movemint page exists but no dates
   return { year: target, real: false, date: field("date"), regOpen: field("regOpen"), regClose: field("regClose"), info: posted || {}, seasons };
 }
-const pick = s => ({ date: parse(s.date), regOpen: parse(s.regOpen), regClose: parse(s.regClose) });
+// regOpenMonth ("2027-01") is for when the organizer has only named the month. It is kept
+// out of regOpen on purpose: the checker treats a regOpen as "already posted" and would skip
+// the alert when BikeReg publishes the real date.
+const pick = s => ({ date: parse(s.date), regOpen: parse(s.regOpen), regClose: parse(s.regClose),
+  regOpenMonth: s.regOpenMonth ? parse(s.regOpenMonth + "-01") : null });
+const monthYear = d => fmt(d, { month: "long", year: "numeric" });
 
 function status(s) {
   if (!s.real) return s.info.register ? ["Posted — dates TBA", "st-soon"] : [`${s.year} not posted yet`, "st-idle"];
-  if (!s.regOpen) return ["Dates posted", "st-soon"];
+  if (!s.regOpen) return s.regOpenMonth ? [`Registration opens ${fmt(s.regOpenMonth, { month: "short", year: "numeric" })}`, "st-soon"] : ["Dates posted", "st-soon"];
   if (today < s.regOpen) return [`Registration opens ${fmt(s.regOpen, { month: "short", day: "numeric" })}`, "st-soon"];
   if (s.regClose && today <= s.regClose) {
     const left = Math.round((s.regClose - today) / DAY);
@@ -279,7 +284,7 @@ function card(r) {
     <div class="tags">${r.bumps ? '<span class="tag bumps">BUMPS</span>' : ""}<span class="tag ${r.st[1]}">${esc(r.st[0])}</span></div>
     <dl class="dates">
       <dt>${s.year} race day</dt><dd>${dateCell(s.date, s.real)}</dd>
-      <dt>Registration opens</dt><dd>${dateCell(s.regOpen, s.real && s.regOpen)}</dd>
+      <dt>Registration opens</dt><dd>${!s.regOpen && s.regOpenMonth ? `${monthYear(s.regOpenMonth)} <span class="est">(day TBA)</span>` : dateCell(s.regOpen, s.real && s.regOpen)}</dd>
       <dt>Registration closes</dt><dd>${dateCell(s.regClose, s.real && s.regClose)}</dd>
     </dl>
     <div class="stats">
@@ -307,12 +312,19 @@ function upcoming() {
     const s = r.s;
     if (s.date) items.push({ d: s.date, real: s.real, r, label: "Race day" });
     if (s.regOpen) items.push({ d: s.regOpen, real: s.real, r, label: "Registration opens" });
+    else if (s.regOpenMonth) items.push({ d: s.regOpenMonth, real: true, month: true, r, label: "Registration opens this month · exact day TBA" });
     if (s.regClose && s.real) items.push({ d: s.regClose, real: s.real, r, label: "Registration closes" });
   }
-  const next = items.filter(i => i.d >= today).sort((a, b) => a.d - b.d).slice(0, 8);
+  // Confirmed race days always make the list; estimates fill the remaining slots. Otherwise a
+  // pile of estimated registration dates can push a real, announced race off the list.
+  const future = items.filter(i => i.d >= today || i.month && i.d.getFullYear() * 12 + i.d.getMonth() >= today.getFullYear() * 12 + today.getMonth())
+    .sort((a, b) => a.d - b.d);
+  const confirmed = future.filter(i => i.real && i.label === "Race day");
+  const rest = future.filter(i => !confirmed.includes(i)).slice(0, Math.max(0, 8 - confirmed.length));
+  const next = [...confirmed, ...rest].sort((a, b) => a.d - b.d);
   document.getElementById("upcoming").innerHTML = next.map(i => `
     <div class="up">
-      <div class="when ${i.real ? "" : "est"}"><span>${fmt(i.d, { month: "short" })}</span><b>${i.real ? "" : "≈"}${i.d.getDate()}</b><span>${i.d.getFullYear()}</span></div>
+      <div class="when ${i.real ? "" : "est"}"><span>${fmt(i.d, { month: "short" })}</span><b>${i.month ? "—" : (i.real ? "" : "≈") + i.d.getDate()}</b><span>${i.d.getFullYear()}</span></div>
       <div class="what"><a href="#r-${i.r.id}" data-jump="${i.r.id}">${esc(i.r.name)}</a>
         <small>${i.label}${i.real ? "" : " · estimated from last year"}</small></div>
     </div>`).join("");
