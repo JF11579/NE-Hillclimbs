@@ -72,7 +72,6 @@ h2 { font-size: 13px; text-transform: uppercase; letter-spacing: .08em; color: v
 .stats b { display: block; font-size: 15px; }
 .stats span { font-size: 11px; color: var(--muted); }
 .notes { font-size: 13.5px; margin: 0; }
-.mine { font-size: 13px; color: var(--accent); font-weight: 600; }
 .links { display: flex; gap: 8px; flex-wrap: wrap; margin-top: auto; }
 .btn { font-size: 13px; text-decoration: none; padding: 6px 11px; border-radius: 8px; border: 1px solid var(--line); color: var(--ink); background: var(--card); }
 .btn.primary { background: var(--accent); border-color: var(--accent); color: #fff; }
@@ -294,7 +293,6 @@ function card(r) {
       <div><b>${stat(r.max_grade, "%")}</b><span>max</span></div>
     </div>
     <p class="notes">${esc(r.notes)}</p>
-    ${r.mine ? `<div class="mine">★ ${esc(r.mine)}</div>` : ""}
     <details><summary>Past years</summary>
       <table><tr><th>Year</th><th>Race</th><th>Reg opened</th><th>Reg closed</th></tr>${hist}</table>
     </details>
