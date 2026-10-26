@@ -96,6 +96,7 @@ details th { color: var(--ink); }
 .lg-bar { display: inline-block; width: 22px; height: 8px; border-radius: 4px; background: var(--reg); }
 .lg-dot { display: inline-block; width: 10px; height: 10px; border-radius: 50%; background: var(--race); }
 .lg-bar.est { background: color-mix(in srgb, var(--reg) 30%, transparent); outline: 1.5px dashed var(--reg); outline-offset: -1.5px; }
+.lg-bar.fade { background: linear-gradient(to right, transparent, var(--reg) 70%); border-radius: 0 4px 4px 0; }
 .lg-dot.est { background: var(--surface); box-shadow: inset 0 0 0 2px var(--race); }
 .tl-wrap { position: relative; }
 .tl-wrap svg { display: block; overflow: visible; }
@@ -146,6 +147,7 @@ details th { color: var(--ink); }
       <span><i class="lg-bar"></i>Registration window</span>
       <span><i class="lg-dot"></i>Race day</span>
       <span><i class="lg-bar est"></i><i class="lg-dot est"></i>Estimated from last year</span>
+      <span><i class="lg-bar fade"></i>Opens sometime that month</span>
     </div>
     <div class="tl-wrap" id="timeline"><div class="tl-tip" id="tl-tip" hidden></div></div>
   </div>
@@ -346,6 +348,10 @@ function timeline() {
   const NS = "http://www.w3.org/2000/svg";
   const el = (tag, attrs, parent) => { const n = document.createElementNS(NS, tag); for (const k in attrs) n.setAttribute(k, attrs[k]); parent.appendChild(n); return n; };
   const svg = el("svg", { width: W, height: H, role: "img", "aria-label": "Season timeline of registration windows and race days" }, wrap);
+  // Fade-in for "registration opens sometime this month": transparent at the 1st, full by month end.
+  const grad = el("linearGradient", { id: "tl-fade", x1: 0, x2: 1, y1: 0, y2: 0 }, el("defs", {}, svg));
+  el("stop", { offset: 0, "stop-color": "var(--reg)", "stop-opacity": 0 }, grad);
+  el("stop", { offset: 1, "stop-color": "var(--reg)", "stop-opacity": 1 }, grad);
 
   // Month grid + labels (every other month when narrow)
   let i = 0;
@@ -370,13 +376,23 @@ function timeline() {
       el("rect", s.real
         ? { x: x1, y: cy - 4, width: x2 - x1, height: 8, rx: 4, fill: "var(--reg)" }
         : { x: x1, y: cy - 4, width: x2 - x1, height: 8, rx: 4, fill: "var(--reg)", "fill-opacity": .3, stroke: "var(--reg)", "stroke-width": 1.5, "stroke-dasharray": "4 2" }, g);
+    } else if (s.regOpenMonth) {
+      // Organizer named the month but not the day: fade in across that month, then solid
+      // up to race day (closing date unknown).
+      const m0 = s.regOpenMonth, m1 = new Date(m0.getFullYear(), m0.getMonth() + 1, 1);
+      const xa = x(m0), xb = x(m1), xc = Math.max(x(s.date) - 7, xb);
+      el("rect", { x: xa, y: cy - 4, width: xb - xa, height: 8, fill: "url(#tl-fade)" }, g);
+      el("rect", { x: xb, y: cy - 4, width: xc - xb, height: 8, rx: 4, fill: "var(--reg)" }, g);
     }
     el("circle", { cx: x(s.date), cy, r: 6, fill: s.real ? "var(--race)" : "var(--surface)",
       stroke: s.real ? "var(--surface)" : "var(--race)", "stroke-width": 2 }, g);
 
     const show = ev => {
       const f = (d, real) => d ? (real ? "" : "≈ ") + fmt(d, { month: "short", day: "numeric", year: "numeric" }) : "TBA";
-      tip.innerHTML = `<b>${esc(r.name)}</b>Race day: ${f(s.date, s.real)}<br>Registration: ${f(s.regOpen, s.real)} – ${f(s.regClose, s.real)}<br><span class="sub">${esc(r.st[0])}</span>`;
+      const reg = !s.regOpen && s.regOpenMonth
+        ? `opens sometime in ${fmt(s.regOpenMonth, { month: "long", year: "numeric" })} (day TBA)`
+        : `${f(s.regOpen, s.real)} – ${f(s.regClose, s.real)}`;
+      tip.innerHTML = `<b>${esc(r.name)}</b>Race day: ${f(s.date, s.real)}<br>Registration: ${reg}<br><span class="sub">${esc(r.st[0])}</span>`;
       tip.hidden = false;
       const box = wrap.getBoundingClientRect();
       const px = ev.clientX ? ev.clientX - box.left : x(s.date), tw = tip.offsetWidth;
