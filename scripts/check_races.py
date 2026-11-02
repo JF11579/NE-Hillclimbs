@@ -34,7 +34,7 @@ NE_STATES = {"NH", "VT", "ME", "MA", "NY", "NJ", "CT", "RI"}
 QUERIES = ["climb", "uphill", "whiteface", "rock pile", "killington"]
 CLIMB_RE = re.compile(r"hill ?climb|uphill|climb challenge", re.I)
 CLOSING_DAYS = 7
-SITE = "https://ne-hillclimbs-jf.netlify.app"
+SITE = "https://northeasthillclimbs.com"
 UA = "Mozilla/5.0 (personal hill-climb calendar; github.com/JF11579)"
 OWNER = "@JF11579"
 

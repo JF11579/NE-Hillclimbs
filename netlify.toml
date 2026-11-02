@@ -5,3 +5,16 @@
   for = "/data/*"
   [headers.values]
     Cache-Control = "no-cache"
+
+# Old Netlify address -> custom domain (keeps old links and Reddit posts working)
+[[redirects]]
+  from = "https://ne-hillclimbs-jf.netlify.app/*"
+  to = "https://northeasthillclimbs.com/:splat"
+  status = 301
+  force = true
+
+[[redirects]]
+  from = "https://www.northeasthillclimbs.com/*"
+  to = "https://northeasthillclimbs.com/:splat"
+  status = 301
+  force = true
