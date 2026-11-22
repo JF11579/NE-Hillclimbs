@@ -1,5 +1,5 @@
 {
-  "checked": "2026-11-21T17:48+00:00",
+  "checked": "2026-11-22T18:06+00:00",
   "events": {
     "allen-clark": {
       "2026": {
@@ -50,6 +50,23 @@
         "regClose": "2026-05-10",
         "regOpen": "2026-03-07",
         "register": "https://www.bikereg.com/74181",
+        "source": "bikereg",
+        "state": "NH",
+        "town": "Conway",
+        "website": "https://crankthekanc.org"
+      },
+      "2027": {
+        "date": "2027-05-15",
+        "eventId": 78514,
+        "fees": [
+          75,
+          150,
+          225
+        ],
+        "name": "Crank the Kanc Hillclimb 2027",
+        "regClose": "2027-05-09",
+        "regOpen": "2027-03-06",
+        "register": "https://www.bikereg.com/78514",
         "source": "bikereg",
         "state": "NH",
         "town": "Conway",
@@ -200,6 +217,7 @@
     }
   },
   "sent": [
+    "crank-the-kanc-2027-announced",
     "other-74847",
     "tinneys-2026-closing",
     "tinneys-2026-open"
